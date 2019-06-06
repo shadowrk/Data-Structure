@@ -1,10 +1,8 @@
-package array;
+package array.template;
 
-import java.util.Arrays;
+public class Array<E> {
 
-public class Array {
-
-    private int[] data;
+    private E[] data;
     //数组中元素个数
     private int size;
     /**
@@ -12,7 +10,7 @@ public class Array {
      * @param capacity  数组容量
      */
     public Array(int capacity){
-        data = new int[capacity];
+        data = (E[])new Object[capacity];
         size = 0;
     }
     /**
@@ -50,14 +48,14 @@ public class Array {
      * 向所有元素后添加新元素
      * @param e
      */
-    public void addLast(int e){
+    public void addLast(E e){
 //        if(size == data.length)
 //            throw new IllegalArgumentException("AddLast failed, Array is full");
 //        data[size] = e;
 //        size ++;
         add(size, e);
     }
-    public void addFirst(int e){
+    public void addFirst(E e){
         add(0, e);
     }
 
@@ -66,9 +64,9 @@ public class Array {
      * @param index
      * @param e
      */
-    public void add(int index, int e){
+    public void add(int index, E e){
         if(size == data.length)
-            throw new IllegalArgumentException("Add failed, Array is full");
+            resize(2 * data.length);
 
         if(index < 0 || index > size)
             throw new IllegalArgumentException("Add failed, Require index >= 0 and index < size");
@@ -82,11 +80,23 @@ public class Array {
     }
 
     /**
+     * 数组扩容
+     * @param newCapacity
+     */
+    private void resize(int newCapacity) {
+        E[] newData = (E[])new Object[newCapacity];
+        for (int i = 0; i < size; i++) {
+            newData[i] = data[i];
+        }
+        data = newData;
+    }
+
+    /**
      * 获取index位置的元素
      * @param index
      * @return
      */
-    public int get(int index){
+    public E get(int index){
         if(index < 0 || index >= size)
             throw new IllegalArgumentException("Get failed. Index is illegal");
         return data[index];
@@ -97,7 +107,7 @@ public class Array {
      * @param index
      * @param e
      */
-    public void set(int index, int e){
+    public void set(int index, E e){
         if(index < 0 || index >= size)
             throw new IllegalArgumentException("Set failed. Index is illegal");
         data[index] = e;
@@ -108,9 +118,9 @@ public class Array {
      * @param e
      * @return
      */
-    public boolean contains(int e){
+    public boolean contains(E e){
         for (int i = 0; i < size; i++) {
-            if(data[i] == e)
+            if(data[i].equals(e))
                 return true;
         }
         return false;
@@ -121,9 +131,9 @@ public class Array {
      * @param e
      * @return 查找元素e所在的位置，若不存在，则返回-1
      */
-    public int find(int e){
+    public int find(E e){
         for (int i = 0; i < size; i++) {
-            if(data[i] == e)
+            if(data[i].equals(e))
                 return i;
         }
         return -1;
@@ -134,20 +144,24 @@ public class Array {
      * @param index
      * @return
      */
-    public int remove(int index){
+    public E remove(int index){
         if(index < 0 || index > size)
             throw new IllegalArgumentException("Remove failed, Index is Illegal");
-        int ret = data[index];
+        E ret = data[index];
         for (int i = index + 1; i < size; i++) {
             data[i-1] = data[i];
         }
         size --;
+        data[size] = null;
+        if(size == data.length / 2){
+            resize(data.length / 2);
+        }
         return ret;
     }
-    public int removeFirst(){
+    public E removeFirst(){
         return remove(0);
     }
-    public int removeLast(){
+    public E removeLast(){
         return remove(size-1);
     }
 
@@ -155,7 +169,7 @@ public class Array {
      * 从数组中删除元素e
      * @param e
      */
-    public void removeElement(int e){
+    public void removeElement(E e){
         int index = find(e);
         if(index != -1)
             remove(index);
@@ -174,3 +188,4 @@ public class Array {
         return res.toString();
     }
 }
+
