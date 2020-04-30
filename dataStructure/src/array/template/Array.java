@@ -179,6 +179,12 @@ public class Array<E> {
         if(index != -1)
             remove(index);
     }
+
+    public void swap(int a, int b){
+        E temp = data[a];
+        data[a] = data[b];
+        data[b] = temp;
+    }
     @Override
     public String toString() {
         StringBuffer res = new StringBuffer();
